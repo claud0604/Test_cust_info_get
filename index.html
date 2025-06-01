@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>APL COLOR 고객정보</title>
+  <style>
+    :root {
+      --primary-color: #b9868c;
+      --primary-light: #f2e3e5; /* 연한 핑크 */
+      --secondary-color: #0a6666; /* 딥 그린 */
+      --tertiary-color: #cdbca9; /* 베이지 */
+      --accent-color: #0a6666;
+      --accent-hover: #084c4c;
+      --text-color: #333;
+      --gray-light: #f8f9fa;
+      --gray-medium: #e9ecef;
+      --gray-border: #ced4da;
+      --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: #fff;
+    }
+
+    .page-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header-content {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-top: 10px;
+    }
+
+    .header-content h1 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    .logo {
+      width: 180px;
+      height: auto;
+      margin: 0 auto;
+      display: block;
+    }
+
+    /* 개인정보 동의 박스 */
+    .privacy-notice {
+      background-color: var(--primary-light);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--primary-color);
+    }
+
+    .privacy-notice h2 {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    .privacy-content {
+      border: 1px solid var(--gray-border);
+      padding: 15px;
+      margin: 10px 0;
+      height: 120px;
+      overflow-y: auto;
+      background-color: white;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .privacy-consent {
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .privacy-consent input[type="checkbox"] {
+      margin: 0;
+      width: 18px;
+      height: 18px;
+      margin-right: 15px;
+      accent-color: var(--accent-color);
+    }
+
+    .privacy-consent label {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    /* 폼 스타일 */
+    #customerForm {
+      width: 100%;
+    }
+
+    .form-group {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 22px;
+      background-color: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--tertiary-color);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 5px;
+      border: 1px solid var(--gray-border);
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 0.95rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-dark);
+      box-shadow: 0 0 0 3px rgba(212, 181, 192, 0.25);
+    }
+
+    button {
+      padding: 13px 25px;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+
+    button:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .edit-btn {
+      background-color: var(--tertiary-color);
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background-color: #baa98e; /* 더 어두운 베이지 */
+    }
+
+    .complete-btn, .next-btn {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .error-message {
+      color: #dc3545;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .required::after {
+      content: " *";
+      color: #dc3545;
+    }
+
+    /* 라디오 버튼 스타일 */
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 5px;
+    }
+    
+    .radio-label {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+    
+    .radio-label input[type="radio"] {
+      margin-right: 8px;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-color);
+    }
+
+    /* 체크박스 스타일 */
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      margin: 0;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-color);
+    }
+    
+    /* 완료 페이지 스타일 */
+    .welcome-text {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+
+    .completion-title {
+      font-size: 1.2rem;
+      margin: 20px 0;
+      font-weight: 500;
+      text-align: center;
+      color: #555;
+    }
+
+    .completion-info {
+      margin: 30px 0;
+      padding: 25px;
+      background-color: var(--primary-light);
+      border-radius: 12px;
+      border: 1px solid var(--primary-color);
+      box-shadow: var(--shadow);
+    }
+
+    .info-item {
+      margin: 20px 0;
+    }
+
+    .info-label {
+      font-weight: 600;
+      margin-right: 10px;
+      display: block;
+      margin-bottom: 8px;
+      color: var(--secondary-color);
+    }
+
+    .date-time-value, .service-value {
+      margin-left: 10px;
+      font-weight: 500;
+    }
+
+    .text-content {
+      margin-top: 8px;
+      line-height: 1.6;
+      padding: 12px;
+      background-color: white;
+      border-radius: 8px;
+    }
+
+    .body-info-content {
+      margin-top: 8px;
+      line-height: 1.8;
+      padding: 12px;
+      background-color: white;
+      border-radius: 8px;
+    }
+
+    .body-info-item {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    /* 버튼 그룹 스타일 */
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+      margin-bottom: 50px;
+    }
+
+    .edit-btn {
+      background-color: #6c757d;
+      color: white;
+      padding: 13px 30px;
+    }
+
+    .edit-btn:hover {
+      background-color: #5a6268;
+    }
+
+    .complete-btn {
+      background-color: var(--accent-color);
+      color: white;
+      padding: 13px 30px;
+    }
+
+    .complete-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* 다음 버튼 스타일 */
+    .next-btn {
+      display: block;
+      width: 100%;
+      max-width: 250px;
+      margin: 30px auto;
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    }
+
+    .next-btn:hover {
+      box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    /* 연락처 입력 스타일 */
+    .phone-input-container {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .phone-input-container input {
+      text-align: center;
+    }
+
+    .phone-prefix {
+      width: 60px;
+      background-color: var(--gray-light);
+      color: #555;
+      font-weight: 600;
+    }
+
+    .phone-number {
+      width: 80px;
+    }
+
+    /* 사이즈 정보 입력 스타일 */
+    .size-input-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .size-input-row span {
+      width: 80px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .size-input-row input {
+      flex: 1;
+    }
+
+    /* 광고 영역 */
+    .kakao-ad {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* 로딩 스피너 */
+    .spinner-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* 이미지 업로드 스타일 */
+    .image-upload-container {
+      margin-top: 15px;
+    }
+
+    .image-upload-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .image-upload-item {
+      flex: 1;
+      margin-right: 10px;
+    }
+
+    .image-preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .image-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      border: 1px solid var(--gray-border);
+      overflow: hidden;
+      position: relative;
+      background-color: var(--gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-preview .remove-image {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 20px;
+      height: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+
+    .upload-btn-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .upload-btn {
+      border: 2px dashed var(--tertiary-color);
+      color: var(--secondary-color);
+      background-color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+    }
+
+    .upload-btn i {
+      margin-right: 5px;
+    }
+
+    .upload-btn-wrapper input[type=file] {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .help-text {
+      color: #666;
+      font-size: 14px;
+      margin-top: 8px;
+      background-color: #f8f9fa;
+      padding: 8px;
+      border-radius: 5px;
+    }
+
+    /* 반응형 스타일 */
+    @media (max-width: 600px) {
+      .page-container {
+        padding: 15px;
+      }
+
+      .header-content h1 {
+        font-size: 1.5rem;
+      }
+
+      .logo {
+        width: 150px;
+      }
+
+      .form-group {
+        padding: 12px;
+      }
+
+      .welcome-text {
+        font-size: 1.5rem;
+      }
+      
+      .completion-title {
+        font-size: 1.1rem;
+      }
+      
+      .edit-btn, .complete-btn {
+        padding: 12px 25px;
+      }
+      
+      .next-btn {
+        margin-bottom: 20px;
+      }
+
+      .image-preview {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <!-- 입력 페이지 -->
+    <div id="inputPage">
+      <div class="header-content">
+        <h1>APL COLOR 고객정보2</h1>
+        <img src="./APLCOLOR_logo.png" alt="APL COLOR 로고" class="logo">
+      </div>
+      
+      <div class="form-content">
+        <div class="privacy-notice">
+          <h2>개인정보 수집 및 이용 동의</h2>
+          <div class="privacy-content">
+            1. 수집하는 개인정보 항목<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;• 성명, 성별, 연락처, 진단 관련 정보(예: 사이즈, 컬러 진단 결과 등).<br><br>
+            
+            2. 개인정보의 수집 및 이용목적<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;• 퍼스널 컬러 진단 서비스 제공 및 고객 맞춤형 진단 결과 제공.<br><br>
+            
+            3. 개인정보의 보유 및 이용기간<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;• 서비스 제공 완료일로부터 1년간 보관하며, 이후 즉시 파기합니다.<br><br>
+            
+            4. 동의 거부 권리 및 불이익 안내<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;• 귀하는 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다. 단, 동의하지 않을 경우 퍼스널 컬러 진단 서비스 제공이 제한될 수 있습니다.
+          </div>
+          <div class="privacy-consent">
+            <input type="checkbox" id="privacyConsent" required>
+            <label for="privacyConsent">개인정보 수집 및 이용에 동의합니다. (필수)</label>
+          </div>
+        </div>
+
+        <form id="customerForm">
+          <div class="form-group">
+            <label for="date" class="required">1. 진단 날짜</label>
+            <input type="date" id="date" required min="<?php echo date('Y-m-d'); ?>">
+          </div>
+
+          <div class="form-group">
+            <label for="time" class="required">2. 진단 시간</label>
+            <input type="time" id="time" required step="1800" value="12:00">
+          </div>
+
+          <div class="form-group">
+            <label for="service" class="required">3. 예약 상품</label>
+            <select id="service" required>
+              <option value="">예약 상품을 선택해주세요</option>
+              <option value="1:1">1:1 퍼스널컬러진단</option>
+              <option value="1:2">1:2 퍼스널컬러진단</option>
+              <option value="1:3">1:3 퍼스널컬러진단</option>
+              <option value="advanced">1:1 심화진단</option>
+              <option value="fit">1:1 핏진단(체형)</option>
+              <option value="wedding">웨딩진단</option>
+              <option value="expert3">전문가 과정(3day)</option>
+              <option value="expert1">전문가 과정(1day)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="name" class="required">4. 성함</label>
+            <input type="text" id="name" required placeholder="이름을 입력해주세요">
+          </div>
+
+          <div class="form-group">
+            <label class="required">5. 성별</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="gender" value="female" required>
+                여성
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="gender" value="male" required>
+                남성
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="age" class="required">6. 나이</label>
+            <input 
+              type="number" 
+              id="age" 
+              required 
+              min="1" 
+              max="150"
+              placeholder="나이를 입력해주세요"
+              style="max-width: 150px;"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="required">7. 연락처</label>
+            <div class="phone-input-container">
+              <input 
+                type="text" 
+                value="010" 
+                disabled 
+                class="phone-prefix"
+              >
+              <span>-</span>
+              <input 
+                type="tel"
+                id="phone2" 
+                maxlength="4" 
+                pattern="[0-9]{4}" 
+                required
+                class="phone-number"
+                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length === 4) document.getElementById('phone3').focus();"
+              >
+              <span>-</span>
+              <input 
+                type="tel"
+                id="phone3" 
+                maxlength="4" 
+                pattern="[0-9]{4}" 
+                required
+                class="phone-number"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="occupation">8. 직업 (선택사항)</label>
+            <input type="text" id="occupation" placeholder="예시: 서비스직, 영업직">
+          </div>
+
+          <div class="form-group">
+            <label>9. 신체 사이즈 (선택사항)</label>
+            <div>
+              <div class="size-input-row">
+                <span>• 키:</span>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" id="height" name="height" placeholder="cm 단위로 입력">
+              </div>
+              <div class="size-input-row">
+                <span>• 몸무게:</span>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" id="weight" name="weight" placeholder="kg 단위로 입력">
+              </div>
+              <div class="size-input-row">
+                <span>• 옷사이즈:</span>
+                <input type="text" id="clothingSize" placeholder="55사이즈, 95사이즈">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reason" class="required">10. 진단 의뢰이유</label>
+            <textarea id="reason" rows="3" style="width: 100%; padding: 12px; resize: vertical;" required placeholder="간단히 작성해주셔도 됩니다"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="stylePreference" class="required">11. 원하는 스타일링 (패션, 헤어, 메이크업등)</label>
+            <textarea id="stylePreference" rows="3" style="width: 100%; padding: 12px; resize: vertical;" required placeholder="간단히 작성해주셔도 됩니다"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>12. 고객사진 업로드 (선택사항)</label>
+            <div class="image-upload-container">
+              <div class="image-upload-row">
+                <div class="image-upload-item">
+                  <label>평소 화장스타일 사진 (최대 2장)</label>
+                  <div class="image-preview-container" id="makeupPreviewContainer" style="margin-bottom: 16px;"></div>
+                  <div class="upload-btn-wrapper">
+                    <div class="upload-btn">
+                      <i class="fas fa-camera"></i> 사진 선택하기
+                    </div>
+                    <input type="file" id="makeupImages" accept="image/*" multiple onchange="handleImageUpload(this, 'makeup')">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="image-upload-row">
+                <div class="image-upload-item">
+                  <label>평소 패션스타일 사진 (최대 2장)</label>
+                  <div class="image-preview-container" id="fashionPreviewContainer" style="margin-bottom: 16px;"></div>
+                  <div class="upload-btn-wrapper">
+                    <div class="upload-btn">
+                      <i class="fas fa-camera"></i> 사진 선택하기
+                    </div>
+                    <input type="file" id="fashionImages" accept="image/*" multiple onchange="handleImageUpload(this, 'fashion')">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" onclick="submitForm(event)" class="next-btn">다음</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 확인 페이지 -->
+    <div id="completionPage" style="display: none;">
+      <div class="header-content">
+        <h1>APL COLOR 고객정보</h1>
+        <img src="./APLCOLOR_logo.png" alt="APL COLOR 로고" class="logo">
+      </div>
+      <h2 class="welcome-text">감사합니다 <span id="customerName"></span>님!</h2>
+      <p class="completion-title">입력정보 확인후 완료버튼을 눌러주세요.</p>
+      <div class="completion-info">
+        <div class="info-item">
+          <span class="info-label">▪ 진단날짜/시간</span>
+          <span id="dateTime" class="date-time-value"></span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 예약상품</span>
+          <span id="serviceInfo" class="service-value"></span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 고객정보</span>
+          <div class="body-info-content" id="personalInfoContainer"></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 신체정보</span>
+          <div class="body-info-content" id="bodyInfo"></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 진단 의뢰이유</span>
+          <div class="text-content" id="reasonInfo"></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 원하는 스타일링</span>
+          <div class="text-content" id="stylePreferenceInfo"></div>
+        </div>
+        <div class="info-item" id="uploadedImages" style="display: none;">
+          <span class="info-label">▪ 업로드된 이미지</span>
+          <div class="image-preview-container" id="imagePreviewContainer" style="margin-top: 10px;"></div>
+        </div>
+      </div>
+      <div class="button-group">
+        <button onclick="editForm()" class="edit-btn">수정</button>
+        <button onclick="completeForm()" class="complete-btn">완료</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="kakao-ad">
+    <ins class="kakao_ad_area" style="display:none;"
+        data-ad-unit = "DAN-g3jKKGaQmBwqWLXL"
+        data-ad-width = "320"
+        data-ad-height = "100"></ins>
+    <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+  </div>
+
+  <!-- 로딩 스피너 HTML -->
+  <div class="spinner-overlay" id="loadingSpinner">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Font Awesome CDN 추가 -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  
+  <script>
+    // 이미지 저장소
+    const uploadedImages = {
+      makeup: [],
+      fashion: []
+    };
+
+    // 페이지 로드 시 맨 위로 스크롤
+    window.onload = function() {
+        window.scrollTo(0, 0);
+        
+        // 오늘 날짜를 구하고 date input의 min 속성 설정
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayString = `${yyyy}-${mm}-${dd}`;
+        
+        const dateInput = document.getElementById('date');
+        dateInput.min = todayString;  // 오늘 이전 날짜 선택 불가
+
+        // 날짜 입력 필드에 change 이벤트 리스너 추가
+        dateInput.addEventListener('change', function(e) {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // 시간 제거하고 날짜만 비교
+
+            if (selectedDate < today) {
+                alert('과거 날짜는 선택할 수 없습니다.');
+                this.value = todayString; // 오늘 날짜로 재설정
+            }
+        });
+
+        // 모바일용 입력 제한 추가
+        dateInput.addEventListener('input', function(e) {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                alert('과거 날짜는 선택할 수 없습니다.');
+                this.value = todayString;
+            }
+        });
+    }
+
+    // 이미지 업로드 처리 함수
+    function handleImageUpload(input, type) {
+      const files = input.files;
+      const previewContainer = document.getElementById(`${type}PreviewContainer`);
+      
+      // 최대 2개까지만 업로드 허용
+      if (uploadedImages[type].length + files.length > 2) {
+        alert(`${type === 'makeup' ? '화장' : '패션'}스타일 사진은 최대 2장까지 업로드 가능합니다.`);
+        return;
+      }
+
+      // 각 파일 처리
+      for (let i = 0; i < files.length && uploadedImages[type].length < 2; i++) {
+        const file = files[i];
+        
+        // 이미지 타입 확인
+        if (!file.type.match('image.*')) {
+          alert('이미지 파일만 업로드 가능합니다.');
+          continue;
+        }
+        
+        // 5MB 이하 파일만 허용
+        if (file.size > 5 * 1024 * 1024) {
+          alert('파일 크기는 5MB 이하만 허용됩니다.');
+          continue;
+        }
+
+        // 이미지 미리보기 생성
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.createElement('div');
+          preview.className = 'image-preview';
+          preview.innerHTML = `
+            <img src="${e.target.result}" alt="미리보기">
+            <div class="remove-image" onclick="removeImage('${type}', ${uploadedImages[type].length})">×</div>
+          `;
+          previewContainer.appendChild(preview);
+          
+          // 업로드된 이미지 저장
+          uploadedImages[type].push({
+            file: file,
+            preview: preview,
+            dataUrl: e.target.result
+          });
+        }
+        reader.readAsDataURL(file);
+      }
+      
+      // 파일 input 초기화 (같은 파일 다시 선택 가능하도록)
+      input.value = '';
+    }
+
+    // 이미지 제거 함수
+    function removeImage(type, index) {
+      if (index >= 0 && index < uploadedImages[type].length) {
+        // 미리보기에서 제거
+        const previewElement = uploadedImages[type][index].preview;
+        if (previewElement && previewElement.parentNode) {
+          previewElement.parentNode.removeChild(previewElement);
+        }
+        
+        // 배열에서 제거
+        uploadedImages[type].splice(index, 1);
+        
+        // 나머지 이미지 인덱스 업데이트
+        const previewContainer = document.getElementById(`${type}PreviewContainer`);
+        previewContainer.innerHTML = '';
+        
+        uploadedImages[type].forEach((item, idx) => {
+          const preview = document.createElement('div');
+          preview.className = 'image-preview';
+          preview.innerHTML = `
+            <img src="${item.dataUrl}" alt="미리보기">
+            <div class="remove-image" onclick="removeImage('${type}', ${idx})">×</div>
+          `;
+          previewContainer.appendChild(preview);
+          item.preview = preview;
+        });
+      }
+    }
+
+    function submitForm(event) {
+        event.preventDefault();
+        
+        // 1. 개인정보 동의 검증
+        if (!document.getElementById('privacyConsent').checked) {
+            alert('개인정보 수집 및 이용에 동의해주세요.');
+            document.getElementById('privacyConsent').focus();
+            return;
+        }
+
+        // 2. 진단 날짜 검증
+        if (!document.getElementById('date').value.trim()) {
+            alert('진단 날짜를 선택해주세요.');
+            document.getElementById('date').focus();
+            return;
+        }
+
+        // 3. 진단 시간 검증
+        if (!document.getElementById('time').value.trim()) {
+            alert('진단 시간을 선택해주세요.');
+            document.getElementById('time').focus();
+            return;
+        }
+
+        // 4. 예약 상품 검증
+        if (!document.getElementById('service').value.trim()) {
+            alert('예약 상품을 선택해주세요.');
+            document.getElementById('service').focus();
+            return;
+        }
+
+        // 5. 성함 검증
+        if (!document.getElementById('name').value.trim()) {
+            alert('성함을 입력해주세요.');
+            document.getElementById('name').focus();
+            return;
+        }
+
+        // 6. 나이 검증 (추가)
+        if (!document.getElementById('age').value.trim()) {
+            alert('나이를 입력해주세요.');
+            document.getElementById('age').focus();
+            return;
+        }
+
+        // 7. 연락처 검증
+        const phone2 = document.getElementById('phone2').value;
+        const phone3 = document.getElementById('phone3').value;
+        
+        if (!phone2 || !phone3 || phone2.length !== 4 || phone3.length !== 4) {
+            alert('연락처를 올바르게 입력해주세요.');
+            document.getElementById('phone2').focus();
+            return;
+        }
+
+        // 나머지 필수 입력 검증
+        if (!document.getElementById('reason').value.trim()) {
+            alert('진단 의뢰이유를 입력해주세요.');
+            document.getElementById('reason').focus();
+            return;
+        }
+
+        if (!document.getElementById('stylePreference').value.trim()) {
+            alert('원하는 스타일링을 입력해주세요.');
+            document.getElementById('stylePreference').focus();
+            return;
+        }
+
+        // 폼 데이터 수집 및 표시
+        const formData = {
+            date: document.getElementById('date').value,
+            time: document.getElementById('time').value,
+            service: document.getElementById('service').value,
+            serviceName: document.getElementById('service').options[document.getElementById('service').selectedIndex].text,
+            name: document.getElementById('name').value,
+            gender: document.querySelector('input[name="gender"]:checked').value,
+            age: document.getElementById('age').value,
+            occupation: document.getElementById('occupation').value || '',
+            phone: "010-" + document.getElementById('phone2').value + "-" + document.getElementById('phone3').value,
+            height: document.getElementById('height').value || '',
+            weight: document.getElementById('weight').value || '',
+            clothingSize: document.getElementById('clothingSize').value || '',
+            reason: document.getElementById('reason').value,
+            stylePreference: document.getElementById('stylePreference').value
+        };
+
+        // 완료 페이지 데이터 설정
+        document.getElementById('customerName').textContent = formData.name;
+        document.getElementById('dateTime').textContent = `${formData.date} / ${formData.time}`;
+        document.getElementById('serviceInfo').textContent = formData.serviceName;
+
+        // 고객정보 표시 방식 수정
+        const personalInfoContainer = document.getElementById('personalInfoContainer');
+        const personalInfoHTML = [
+            `<span class="body-info-item">• 성함: ${formData.name}</span>`,
+            `<span class="body-info-item">• 성별: ${formData.gender === 'male' ? '남성' : '여성'}</span>`,
+            `<span class="body-info-item">• 나이: ${document.getElementById('age').value}세</span>`,
+            `<span class="body-info-item">• 연락처: ${formData.phone}</span>`
+        ];
+        
+        if (formData.occupation) {
+            personalInfoHTML.push(`<span class="body-info-item">• 직업: ${formData.occupation}</span>`);
+        }
+        
+        personalInfoContainer.innerHTML = personalInfoHTML.join('');
+
+        // 신체사이즈 정보 설정
+        const bodyInfoElement = document.getElementById('bodyInfo');
+        let bodyInfoHTML = '';
+        
+        if (formData.height) {
+            bodyInfoHTML += `<span class="body-info-item">• 키: ${formData.height}cm</span>`;
+        }
+        if (formData.weight) {
+            bodyInfoHTML += `<span class="body-info-item">• 몸무게: ${formData.weight}kg</span>`;
+        }
+        if (formData.clothingSize) {
+            bodyInfoHTML += `<span class="body-info-item">• 옷사이즈: ${formData.clothingSize}</span>`;
+        }
+        
+        if (bodyInfoHTML) {
+            bodyInfoElement.innerHTML = bodyInfoHTML;
+            bodyInfoElement.parentElement.style.display = 'block';
+        } else {
+            bodyInfoElement.parentElement.style.display = 'none';
+        }
+
+        document.getElementById('reasonInfo').textContent = formData.reason;
+        document.getElementById('stylePreferenceInfo').textContent = formData.stylePreference;
+
+        // 업로드된 이미지 표시
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        imagePreviewContainer.innerHTML = '';
+        
+        const totalImages = uploadedImages.makeup.length + uploadedImages.fashion.length;
+        if (totalImages > 0) {
+          document.getElementById('uploadedImages').style.display = 'block';
+          
+          // 화장 스타일 이미지
+          uploadedImages.makeup.forEach(item => {
+            const preview = document.createElement('div');
+            preview.className = 'image-preview';
+            preview.innerHTML = `
+              <img src="${item.dataUrl}" alt="화장 스타일">
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0,0,0,0.5); color: white; font-size: 10px; padding: 2px; text-align: center;">화장 스타일</div>
+            `;
+            imagePreviewContainer.appendChild(preview);
+          });
+          
+          // 패션 스타일 이미지
+          uploadedImages.fashion.forEach(item => {
+            const preview = document.createElement('div');
+            preview.className = 'image-preview';
+            preview.innerHTML = `
+              <img src="${item.dataUrl}" alt="패션 스타일">
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0,0,0,0.5); color: white; font-size: 10px; padding: 2px; text-align: center;">패션 스타일</div>
+            `;
+            imagePreviewContainer.appendChild(preview);
+          });
+        } else {
+          document.getElementById('uploadedImages').style.display = 'none';
+        }
+
+        // 화면 전환
+        document.getElementById('inputPage').style.display = 'none';
+        document.getElementById('completionPage').style.display = 'block';
+        
+        // 맨 위로 스크롤
+        window.scrollTo(0, 0);
+    }
+
+    function editForm() {
+        document.getElementById('completionPage').style.display = 'none';
+        document.getElementById('inputPage').style.display = 'block';
+        
+        // 맨 위로 스크롤
+        window.scrollTo(0, 0);
+    }
+
+    async function completeForm() {
+        try {
+            // 로딩 스피너 표시
+            document.getElementById('loadingSpinner').style.display = 'flex';
+            
+            // 폼 데이터 수집
+            const formData = new FormData();
+            
+            // 기본 고객 정보 추가
+            formData.append('date', document.getElementById('date').value);
+            formData.append('time', document.getElementById('time').value);
+            formData.append('serviceName', document.getElementById('service').options[document.getElementById('service').selectedIndex].text);
+            formData.append('name', document.getElementById('name').value);
+            formData.append('gender', document.querySelector('input[name="gender"]:checked').value);
+            formData.append('age', document.getElementById('age').value);
+            formData.append('phone', "010-" + document.getElementById('phone2').value + "-" + document.getElementById('phone3').value);
+            formData.append('occupation', document.getElementById('occupation').value || '');
+            formData.append('height', document.getElementById('height').value || '');
+            formData.append('weight', document.getElementById('weight').value || '');
+            formData.append('clothingSize', document.getElementById('clothingSize').value || '');
+            formData.append('reason', document.getElementById('reason').value);
+            formData.append('stylePreference', document.getElementById('stylePreference').value);
+            
+            // 화장 스타일 이미지 추가
+            uploadedImages.makeup.forEach((item, index) => {
+                formData.append(`makeupImage${index + 1}`, item.file);
+            });
+            
+            // 패션 스타일 이미지 추가
+            uploadedImages.fashion.forEach((item, index) => {
+                formData.append(`fashionImage${index + 1}`, item.file);
+            });
+            
+            // 이미지 파일 정보 추가
+            formData.append('makeupImagesCount', uploadedImages.makeup.length);
+            formData.append('fashionImagesCount', uploadedImages.fashion.length);
+
+            // API 요청 시 타임아웃 설정 (60초 - 이미지 업로드를 고려해 시간 연장)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+            const response = await fetch('http://localhost:8080/api/customer-info', {
+                method: 'POST',
+                body: formData,
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId); // 타임아웃 클리어
+
+            // 로딩 스피너 숨기기
+            document.getElementById('loadingSpinner').style.display = 'none';
+
+            if (response.ok) {
+                if (confirm("고객정보 입력이 완료되었습니다. 감사합니다.")) {
+                    // 카카오톡 인앱 브라우저 닫기
+                    location.href = "kakaotalk://inappbrowser/close";
+                }
+            } else {
+                throw new Error('서버 응답 오류 - 상태 코드: ' + response.status);
+            }
+
+        } catch (error) {
+            // 에러 발생 시에도 로딩 스피너 숨기기
+            document.getElementById('loadingSpinner').style.display = 'none';
+            
+            console.error('Error:', error);
+            
+            // 타임아웃 에러 확인
+            if (error.name === 'AbortError') {
+                alert('서버 응답 시간이 너무 오래 걸립니다. 잠시 후 다시 시도해주세요.');
+            } else {
+                alert('서버 통신 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        }
+    }
+
+    // 전화번호 숫자만 입력 가능하도록 설정
+    document.getElementById('phone2').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+    document.getElementById('phone3').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+    
+    // 키와 몸무게 필드에 숫자만 입력 가능하도록 설정
+    document.getElementById('height').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+    document.getElementById('weight').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+  </script>
+</body>
+</html>
