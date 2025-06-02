@@ -180,6 +180,10 @@
       color: white;
     }
 
+    .complete-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
     .error-message {
       color: #dc3545;
       margin-top: 10px;
@@ -558,6 +562,23 @@
         height: 80px;
       }
     }
+
+    /* 로딩 스피너 컨테이너 스타일 */
+    .spinner-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 로딩 메시지 스타일 */
+    .spinner-text {
+      color: white;
+      font-size: 16px;
+      margin-top: 15px;
+      text-align: center;
+      font-weight: 500;
+    }
   </style>
   <!-- browser-image-compression CDN 추가 -->
   <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
@@ -807,7 +828,10 @@
 
   <!-- 로딩 스피너 HTML -->
   <div class="spinner-overlay" id="loadingSpinner">
-    <div class="spinner"></div>
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <p class="spinner-text">이미지 업로드 중입니다. 잠시만 기다려주세요...</p>
+    </div>
   </div>
 
   <!-- Font Awesome CDN 추가 -->
