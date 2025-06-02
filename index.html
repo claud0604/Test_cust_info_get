@@ -1269,9 +1269,20 @@
 
             if (response.ok) {
                 if (confirm("고객정보 입력이 완료되었습니다. 감사합니다.")) {
-                    // 카카오톡 인앱 브라우저 닫기
-                    location.href = "kakaotalk://inappbrowser/close";
-                    window.close(); // 일반 브라우저 창도 닫기 시도
+                    // 카카오톡 인앱 브라우저 감지
+                    const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
+                    
+                    if (isKakaoInApp) {
+                        // 카카오톡 인앱 브라우저 닫기 시도
+                        location.href = "kakaotalk://inappbrowser/close";
+                        // 백업 방법: 약간의 지연 후 다시 시도
+                        setTimeout(() => {
+                            location.href = "kakaotalk://inappbrowser/close";
+                        }, 100);
+                    } else {
+                        // 일반 브라우저에서는 창 닫기 시도
+                        window.close();
+                    }
                 }
             } else {
                 throw new Error('서버 응답 오류 - 상태 코드: ' + response.status);
