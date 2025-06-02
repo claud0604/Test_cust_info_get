@@ -559,6 +559,8 @@
       }
     }
   </style>
+  <!-- browser-image-compression CDN 추가 -->
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
 </head>
 <body>
   <div class="page-container">
@@ -858,53 +860,67 @@
     }
 
     // 이미지 업로드 처리 함수
-    function handleImageUpload(input, type) {
+    async function handleImageUpload(input, type) {
       const files = input.files;
       const previewContainer = document.getElementById(`${type}PreviewContainer`);
-      
+
       // 최대 2개까지만 업로드 허용
       if (uploadedImages[type].length + files.length > 2) {
         alert(`${type === 'makeup' ? '화장' : '패션'}스타일 사진은 최대 2장까지 업로드 가능합니다.`);
         return;
       }
 
-      // 각 파일 처리
       for (let i = 0; i < files.length && uploadedImages[type].length < 2; i++) {
         const file = files[i];
-        
+
         // 이미지 타입 확인
         if (!file.type.match('image.*')) {
           alert('이미지 파일만 업로드 가능합니다.');
           continue;
         }
-        
-        // 5MB 이하 파일만 허용
+
+        // 5MB 이하 파일만 허용 (압축 전 체크, 이후 더 줄어듦)
         if (file.size > 5 * 1024 * 1024) {
           alert('파일 크기는 5MB 이하만 허용됩니다.');
           continue;
         }
 
-        // 이미지 미리보기 생성
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const preview = document.createElement('div');
-          preview.className = 'image-preview';
-          preview.innerHTML = `
-            <img src="${e.target.result}" alt="미리보기">
-            <div class="remove-image" onclick="removeImage('${type}', ${uploadedImages[type].length})">×</div>
-          `;
-          previewContainer.appendChild(preview);
-          
-          // 업로드된 이미지 저장
-          uploadedImages[type].push({
-            file: file,
-            preview: preview,
-            dataUrl: e.target.result
-          });
+        // 이미지 압축 옵션
+        const options = {
+          maxSizeMB: 1, // 1MB 이하로 압축
+          maxWidthOrHeight: 1024, // 최대 1024px로 리사이즈
+          useWebWorker: true
+        };
+
+        try {
+          // 압축 실행 (browser-image-compression 사용)
+          const compressedFile = await imageCompression(file, options);
+
+          // 미리보기 생성
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const preview = document.createElement('div');
+            preview.className = 'image-preview';
+            preview.innerHTML = `
+              <img src="${e.target.result}" alt="미리보기">
+              <div class="remove-image" onclick="removeImage('${type}', ${uploadedImages[type].length})">×</div>
+            `;
+            previewContainer.appendChild(preview);
+
+            // 업로드된 이미지 저장
+            uploadedImages[type].push({
+              file: compressedFile,
+              preview: preview,
+              dataUrl: e.target.result
+            });
+          };
+          reader.readAsDataURL(compressedFile);
+        } catch (error) {
+          alert('이미지 압축 중 오류가 발생했습니다.');
+          continue;
         }
-        reader.readAsDataURL(file);
       }
-      
+
       // 파일 input 초기화 (같은 파일 다시 선택 가능하도록)
       input.value = '';
     }
@@ -1158,7 +1174,7 @@
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 60000);
 
-            const response = await fetch('https://gswhh5ngnd.execute-api.ap-northeast-2.amazonaws.com/prod/api/customer-info', {
+            const response = await fetch('http://localhost:8080/api/customer-info', {
                 method: 'POST',
                 body: formData,
                 signal: controller.signal
