@@ -523,44 +523,88 @@
       border-radius: 5px;
     }
 
-    /* 반응형 스타일 */
-    @media (max-width: 600px) {
+    /* 모바일에서 상단 여백 조정 */
+    body {
+      padding-top: 0; /* 상단 여백 제거 */
+    }
+
+    /* 모바일 최적화 추가 */
+    @media (max-width: 480px) {
       .page-container {
-        padding: 15px;
+        padding: 5px;
+      }
+
+      .header-content {
+        margin-bottom: 8px;
+        padding-top: 2px;
       }
 
       .header-content h1 {
-        font-size: 1.5rem;
+        font-size: 1.1rem;
+        margin-bottom: 2px;
       }
 
       .logo {
-        width: 150px;
+        width: 90px;
+        margin-bottom: 0;
       }
 
+      /* 날짜, 시간 입력 필드 특별 조정 */
+      #date, #time {
+        font-size: 0.9rem;
+        padding: 0 5px !important;
+        text-align: center;
+      }
+      
+      /* 폼 그룹 조정 */
       .form-group {
-        padding: 12px;
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+      
+      /* 이름 입력칸 사이즈 주기 */
+      #name {
+        height: 40px;
+        padding: 8px;
       }
 
-      .welcome-text {
-        font-size: 1.5rem;
-      }
-      
-      .completion-title {
-        font-size: 1.1rem;
-      }
-      
-      .edit-btn, .complete-btn {
-        padding: 12px 25px;
-      }
-      
-      .next-btn {
-        margin-bottom: 20px;
+      /* 개인정보 동의 섹션 축소 */
+      .privacy-notice {
+        padding: 8px;
+        margin-bottom: 10px;
       }
 
-      .image-preview {
-        width: 80px;
-        height: 80px;
+      .privacy-content {
+        height: 60px;
+        padding: 5px;
+        font-size: 0.8rem;
       }
+
+      .privacy-notice h2 {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+      }
+      
+      /* 라벨 크기 조정 */
+      label {
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+      }
+    }
+
+    /* iOS 및 모바일에서 date, time input이 박스 밖으로 튀어나가지 않도록 강제 */
+    input[type="date"],
+    input[type="time"] {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      min-width: 0 !important;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      font-size: 0.9rem;
+      padding: 5px 8px !important;
+      height: 35px !important;
     }
 
     /* 로딩 스피너 컨테이너 스타일 */
@@ -788,7 +832,7 @@
         <h1>APL COLOR 고객정보</h1>
         <img src="./APLCOLOR_logo.png" alt="APL COLOR 로고" class="logo">
       </div>
-      <h2 class="welcome-text"> <span id="customerName"></span>님! 아래의 내용을 확인해주세요.</h2>
+      <h2 class="welcome-text"><span id="customerName"></span>님! 아래 정보를 확인해주세요.</h2>
       <p class="completion-title">입력정보 확인후 완료버튼을 눌러주세요.</p>
       <div class="completion-info">
         <div class="info-item">
@@ -853,7 +897,11 @@
 
     // 페이지 로드 시 맨 위로 스크롤
     window.onload = function() {
+        // 두 번 스크롤하여 확실하게 상단으로 이동
         window.scrollTo(0, 0);
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 100);
         
         // 오늘 날짜를 구하고 date input의 min 속성 설정
         const today = new Date();
@@ -888,6 +936,9 @@
                 this.value = todayString;
             }
         });
+
+        // 입력 폼 표시
+        document.getElementById('inputPage').style.display = 'block';
     }
 
     // 이미지 업로드 처리 함수
