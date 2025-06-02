@@ -578,6 +578,15 @@
       margin-top: 15px;
       text-align: center;
       font-weight: 500;
+      position: absolute;
+      top: 60%; /* 스피너 아래에 위치하도록 조정 */
+      width: 100%;
+    }
+
+    /* 스피너 위치 조정 */
+    .spinner {
+      position: relative;
+      top: -20px; /* 스피너를 약간 위로 이동 */
     }
   </style>
   <!-- browser-image-compression CDN 추가 -->
@@ -779,7 +788,7 @@
         <h1>APL COLOR 고객정보</h1>
         <img src="./APLCOLOR_logo.png" alt="APL COLOR 로고" class="logo">
       </div>
-      <h2 class="welcome-text"><span id="customerName"></span>님! 아래정보를 확인해주세요.</h2>
+      <h2 class="welcome-text"><span id="customerName"></span>님! 아래 정보를 확인해주세요.</h2>
       <p class="completion-title">입력정보 확인후 완료버튼을 눌러주세요.</p>
       <div class="completion-info">
         <div class="info-item">
@@ -828,10 +837,8 @@
 
   <!-- 로딩 스피너 HTML -->
   <div class="spinner-overlay" id="loadingSpinner">
-    <div class="spinner-container">
-      <div class="spinner"></div>
-      <p class="spinner-text">이미지 업로드 중입니다. 잠시만 기다려주세요...</p>
-    </div>
+    <div class="spinner"></div>
+    <p class="spinner-text">이미지 업로드 중입니다. 잠시만 기다려주세요...</p>
   </div>
 
   <!-- Font Awesome CDN 추가 -->
