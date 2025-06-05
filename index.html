@@ -695,7 +695,14 @@
           
           <div class="form-group">
             <label for="name" class="required">4. 성함</label>
-            <input type="text" id="name" required placeholder="이름을 입력해주세요">
+            <input type="text" id="name" required placeholder="이름을 입력해주세요" oninput="validateNameInput(this)">
+            <div class="help-text" id="nameHelpText" style="display: none;">
+              • 1:2 또는 1:3 진단의 경우, 각 고객님께서 개별적으로 입력해주세요.<br>
+              • 이름에 공백이나 쉼표(,)는 입력할 수 없습니다.
+            </div>
+            <div class="error-message" id="nameError" style="display: none; color: #dc3545; font-size: 0.9rem; margin-top: 5px;">
+              이름에 공백이나 쉼표(,)는 입력할 수 없습니다.
+            </div>
           </div>
 
           <div class="form-group">
@@ -1317,6 +1324,40 @@
     });
     document.getElementById('weight').addEventListener('input', function(e) {
       e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+
+    // 이름 입력 검증 함수 수정
+    function validateNameInput(input) {
+        const nameError = document.getElementById('nameError');
+        
+        // 공백이나 쉼표가 있는지 확인
+        if (input.value.includes(' ') || input.value.includes(',')) {
+            nameError.style.display = 'block';
+            input.setCustomValidity('이름에 공백이나 쉼표(,)는 입력할 수 없습니다.');
+        } else {
+            nameError.style.display = 'none';
+            input.setCustomValidity('');
+        }
+        
+        // 1:2 또는 1:3 진단 선택 시 안내 메시지 표시
+        const serviceSelect = document.getElementById('service');
+        const nameHelpText = document.getElementById('nameHelpText');
+        
+        if (serviceSelect.value === '1:2' || serviceSelect.value === '1:3') {
+            nameHelpText.style.display = 'block';
+        } else {
+            nameHelpText.style.display = 'none';
+        }
+    }
+
+    // 서비스 선택 시 이름 입력 안내 메시지 표시
+    document.getElementById('service').addEventListener('change', function() {
+        const nameHelpText = document.getElementById('nameHelpText');
+        if (this.value === '1:2' || this.value === '1:3') {
+            nameHelpText.style.display = 'block';
+        } else {
+            nameHelpText.style.display = 'none';
+        }
     });
   </script>
 </body>
