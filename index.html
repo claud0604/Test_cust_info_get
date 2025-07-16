@@ -797,7 +797,7 @@
             <textarea id="stylePreference" rows="3" style="width: 100%; padding: 12px; resize: vertical;" required placeholder="간단히 작성해주셔도 됩니다"></textarea>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" style="display: none;">
             <label>12. 고객사진 업로드 (선택사항)</label>
             <div class="image-upload-container">
               <div class="image-upload-row">
@@ -889,7 +889,7 @@
   <!-- 로딩 스피너 HTML -->
   <div class="spinner-overlay" id="loadingSpinner">
     <div class="spinner"></div>
-    <p class="spinner-text">이미지 업로드 중입니다. 잠시만 기다려주세요...</p>
+    <p class="spinner-text">고객정보를 전송 중입니다. 잠시만 기다려주세요...</p>
   </div>
 
   <!-- Font Awesome CDN 추가 -->
@@ -1245,19 +1245,18 @@
             formData.append('reason', document.getElementById('reason').value);
             formData.append('stylePreference', document.getElementById('stylePreference').value);
             
-            // 화장 스타일 이미지 추가
-            uploadedImages.makeup.forEach((item, index) => {
-                formData.append(`makeupImage${index + 1}`, item.file);
-            });
+            // 이미지 업로드 임시 비활성화
+            // uploadedImages.makeup.forEach((item, index) => {
+            //     formData.append(`makeupImage${index + 1}`, item.file);
+            // });
             
-            // 패션 스타일 이미지 추가
-            uploadedImages.fashion.forEach((item, index) => {
-                formData.append(`fashionImage${index + 1}`, item.file);
-            });
+            // uploadedImages.fashion.forEach((item, index) => {
+            //     formData.append(`fashionImage${index + 1}`, item.file);
+            // });
             
-            // 이미지 파일 정보 추가
-            formData.append('makeupImagesCount', uploadedImages.makeup.length);
-            formData.append('fashionImagesCount', uploadedImages.fashion.length);
+            // 이미지 파일 정보 추가 (0으로 설정)
+            formData.append('makeupImagesCount', 0);
+            formData.append('fashionImagesCount', 0);
 
             // API 요청 시 타임아웃 설정 (60초 - 이미지 업로드를 고려해 시간 연장)
             const controller = new AbortController();
