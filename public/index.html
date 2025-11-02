@@ -1262,7 +1262,10 @@
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 60000);
 
-            const response = await fetch('/api/customer-info', {
+            // Cloudflare Pages 배포 환경에서는 백엔드 API 절대 URL 사용
+            const API_URL = 'https://cust-info-get-test-connect.apls.kr/api/customer-info';
+
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 body: formData,
                 signal: controller.signal
