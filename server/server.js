@@ -8,7 +8,7 @@ const connectDB = require('./config/db');
 const custInfoRoutes = require('./routes/custInfoRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3010;
 
 // MongoDB 연결
 connectDB();

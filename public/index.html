@@ -497,6 +497,24 @@
       align-items: center;
       justify-content: center;
       height: 50px;
+      transition: all 0.3s ease;
+    }
+
+    .upload-btn:hover {
+      border-color: var(--secondary-color);
+      background-color: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(10, 102, 102, 0.2);
+    }
+
+    .upload-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(10, 102, 102, 0.2);
+    }
+
+    .upload-btn-wrapper:active .upload-btn {
+      border-color: var(--accent-color);
+      background-color: var(--primary-light);
     }
 
     .upload-btn i {
