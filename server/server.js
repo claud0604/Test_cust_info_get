@@ -14,7 +14,14 @@ const PORT = process.env.PORT || 3003;
 connectDB();
 
 // Middleware
-app.use(cors());
+// CORS 설정 - Cloudflare Pages 프론트엔드 허용
+const corsOptions = {
+    origin: 'https://test-cust-info-get.apls.kr',
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

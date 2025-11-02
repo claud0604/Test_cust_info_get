@@ -2,6 +2,18 @@
 
 AWS Lambda에서 Node.js/Express 서버로 마이그레이션한 고객정보 수집 시스템입니다.
 
+## 배포 구조
+
+- **프론트엔드**: Cloudflare Pages
+  - URL: https://test-cust-info-get.apls.kr
+  - 정적 HTML/CSS/JS 호스팅
+
+- **백엔드 API**: Oracle Cloud VM (Ubuntu)
+  - 도메인: http://cust-info-get-test-connect.apls.kr
+  - 서버 IP: 152.67.200.121
+  - 포트: 3010
+  - Nginx 리버스 프록시
+
 ## 프로젝트 구조
 
 ```
@@ -57,9 +69,16 @@ npm start
 ```
 
 ### 3. 웹 브라우저에서 접속
+
+**로컬 개발:**
 ```
-http://localhost:3003
+http://localhost:3010
 ```
+
+**프로덕션:**
+- 프론트엔드: https://test-cust-info-get.apls.kr
+- 백엔드 API: http://cust-info-get-test-connect.apls.kr
+- API 엔드포인트: http://cust-info-get-test-connect.apls.kr/api/customer-info
 
 ## 주요 기능
 
