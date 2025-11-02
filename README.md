@@ -58,7 +58,7 @@ npm start
 
 ### 3. 웹 브라우저에서 접속
 ```
-http://localhost:3003
+http://localhost:3010
 ```
 
 ## 주요 기능
