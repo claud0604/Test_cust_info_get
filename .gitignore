@@ -1,0 +1,14 @@
+# 환경 변수
+server/.env
+
+# Dependencies
+server/node_modules/
+
+# Logs
+server/logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
