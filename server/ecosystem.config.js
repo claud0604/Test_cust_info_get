@@ -7,7 +7,7 @@
 module.exports = {
   apps: [
     {
-      name: 'cust-info-get',
+      name: 'test-cust-info-get',
       script: './server.js',
       env: {
         NODE_ENV: 'production'
