@@ -14,9 +14,12 @@ const PORT = process.env.PORT || 3010;
 connectDB();
 
 // Middleware
-// CORS 설정 - Cloudflare Pages 프론트엔드 허용
+// CORS 설정 - Cloudflare Pages 프론트엔드 허용 (pages.dev 및 커스텀 도메인)
 const corsOptions = {
-    origin: 'https://test-cust-info-get.apls.kr',
+    origin: [
+        'https://test-cust-info-get.apls.kr',
+        'https://test-cust-info-get.pages.dev'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
