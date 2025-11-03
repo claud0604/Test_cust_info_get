@@ -14,17 +14,18 @@ const PORT = process.env.PORT || 3010;
 connectDB();
 
 // Middleware
-// CORS 설정 - Cloudflare Pages 프론트엔드 허용 (pages.dev 및 커스텀 도메인)
-const corsOptions = {
-    origin: [
-        'https://test-cust-info-get.apls.kr',
-        'https://test-cust-info-get.pages.dev'
-    ],
-    credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-};
-app.use(cors(corsOptions));
+// CORS 설정 - Nginx에서 처리하므로 비활성화
+// (Nginx와 Express 양쪽에서 CORS 헤더를 추가하면 중복 오류 발생)
+// const corsOptions = {
+//     origin: [
+//         'https://test-cust-info-get.apls.kr',
+//         'https://test-cust-info-get.pages.dev'
+//     ],
+//     credentials: true,
+//     methods: ['GET', 'POST', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization']
+// };
+// app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
