@@ -59,6 +59,7 @@ const custInfoSchema = new mongoose.Schema({
     },
 }, {
     timestamps: true,
+    collection: 'Cust_info'  // 컬렉션 이름 명시적 지정
 });
 
 module.exports = mongoose.model('Cust_info', custInfoSchema);
