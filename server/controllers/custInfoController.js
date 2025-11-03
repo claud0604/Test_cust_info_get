@@ -32,22 +32,26 @@ const createCustomerInfo = async (req, res) => {
 
         // 이미지 파일 처리
         const uploadedImageKeys = [];
-        const timestamp = Date.now();
 
-        // 이름에서 특수문자 제거 (파일명에 사용)
-        const sanitizedName = name.replace(/[^a-zA-Z0-9가-힣]/g, '');
+        // 날짜/시간을 파일명 형식으로 변환 (예: 2025-11-09 15:30 -> 2511091530)
+        const dateTimeStr = `${date.replace(/-/g, '').slice(2)}${time.replace(/:/g, '').slice(0, 4)}`;
+
+        // 이미지 번호 카운터
+        let imageNumber = 0;
 
         // 화장 스타일 이미지 업로드
         if (req.files['makeupImage1']) {
             const file = req.files['makeupImage1'][0];
-            const fileName = `${sanitizedName}_${timestamp}_makeup1.jpg`;
+            imageNumber++;
+            const fileName = `${dateTimeStr}_${name}_${imageNumber}.jpg`;
             const s3Key = await uploadImageToS3(file.buffer, fileName, file.mimetype);
             uploadedImageKeys.push(s3Key);
         }
 
         if (req.files['makeupImage2']) {
             const file = req.files['makeupImage2'][0];
-            const fileName = `${sanitizedName}_${timestamp}_makeup2.jpg`;
+            imageNumber++;
+            const fileName = `${dateTimeStr}_${name}_${imageNumber}.jpg`;
             const s3Key = await uploadImageToS3(file.buffer, fileName, file.mimetype);
             uploadedImageKeys.push(s3Key);
         }
@@ -55,14 +59,16 @@ const createCustomerInfo = async (req, res) => {
         // 패션 스타일 이미지 업로드
         if (req.files['fashionImage1']) {
             const file = req.files['fashionImage1'][0];
-            const fileName = `${sanitizedName}_${timestamp}_fashion1.jpg`;
+            imageNumber++;
+            const fileName = `${dateTimeStr}_${name}_${imageNumber}.jpg`;
             const s3Key = await uploadImageToS3(file.buffer, fileName, file.mimetype);
             uploadedImageKeys.push(s3Key);
         }
 
         if (req.files['fashionImage2']) {
             const file = req.files['fashionImage2'][0];
-            const fileName = `${sanitizedName}_${timestamp}_fashion2.jpg`;
+            imageNumber++;
+            const fileName = `${dateTimeStr}_${name}_${imageNumber}.jpg`;
             const s3Key = await uploadImageToS3(file.buffer, fileName, file.mimetype);
             uploadedImageKeys.push(s3Key);
         }
