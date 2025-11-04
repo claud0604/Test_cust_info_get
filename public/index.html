@@ -891,7 +891,7 @@
       </div>
       <div class="button-group">
         <button onclick="editForm()" class="edit-btn">수정</button>
-        <button onclick="completeForm()" class="complete-btn">완료</button>
+        <button id="completeBtn" onclick="completeForm()" class="complete-btn">완료</button>
       </div>
     </div>
   </div>
@@ -1242,9 +1242,23 @@
 
     async function completeForm() {
         try {
+            // 완료 버튼 가져오기
+            const completeBtn = document.getElementById('completeBtn');
+
+            // 이미 제출 중이면 중복 클릭 방지
+            if (completeBtn.disabled) {
+                return;
+            }
+
+            // 버튼 비활성화 및 텍스트 변경
+            completeBtn.disabled = true;
+            completeBtn.textContent = '처리 중...';
+            completeBtn.style.opacity = '0.6';
+            completeBtn.style.cursor = 'not-allowed';
+
             // 로딩 스피너 표시
             document.getElementById('loadingSpinner').style.display = 'flex';
-            
+
             // 폼 데이터 수집
             const formData = new FormData();
             
@@ -1318,9 +1332,16 @@
         } catch (error) {
             // 에러 발생 시에도 로딩 스피너 숨기기
             document.getElementById('loadingSpinner').style.display = 'none';
-            
+
+            // 버튼 다시 활성화 (에러 발생 시 재시도 가능하도록)
+            const completeBtn = document.getElementById('completeBtn');
+            completeBtn.disabled = false;
+            completeBtn.textContent = '완료';
+            completeBtn.style.opacity = '1';
+            completeBtn.style.cursor = 'pointer';
+
             console.error('Error:', error);
-            
+
             // 타임아웃 에러 확인
             if (error.name === 'AbortError') {
                 alert('서버 응답 시간이 너무 오래 걸립니다. 잠시 후 다시 시도해주세요.');
