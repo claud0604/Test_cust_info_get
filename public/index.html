@@ -1252,9 +1252,21 @@
       const name = document.getElementById('landingName').value.trim();
       if (name) document.getElementById('name').value = name;
 
-      // 인증 상태 초기화 (inputPage에서 새로 인증)
-      isPhoneVerified = false;
-      currentVerifyToken = null;
+      // landingPage에서 인증 완료된 경우 연락처 + 인증 상태 넘기기
+      if (isPhoneVerified && currentVerifyToken) {
+        const p2 = document.getElementById('landingPhone2').value;
+        const p3 = document.getElementById('landingPhone3').value;
+        if (p2) document.getElementById('phone2').value = p2;
+        if (p3) document.getElementById('phone3').value = p3;
+        document.getElementById('inputVerifyRow').style.display = 'none';
+        document.getElementById('inputVerifyStatus').innerHTML = '<span class="verify-success">인증 완료</span>';
+        document.getElementById('inputSendCodeBtn').disabled = true;
+        document.getElementById('inputSendCodeBtn').textContent = '인증완료';
+      } else {
+        isPhoneVerified = false;
+        currentVerifyToken = null;
+      }
+
       isEditMode = false;
       currentCustomerId = null;
       window.scrollTo(0, 0);
