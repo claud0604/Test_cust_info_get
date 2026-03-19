@@ -345,6 +345,11 @@
       display: flex;
       gap: 8px;
       align-items: center;
+      justify-content: center;
+    }
+
+    #inputPage .phone-input-container {
+      justify-content: flex-start;
     }
 
     .phone-input-container input {
@@ -625,6 +630,73 @@
       height: 35px !important;
     }
 
+    /* SMS 인증 스타일 */
+    .verify-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      font-size: 0.85rem;
+      min-width: 70px;
+      white-space: nowrap;
+    }
+
+    .verify-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .verify-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .verify-timer {
+      color: #dc3545;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .verify-success {
+      color: var(--accent-color);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* 조회 페이지 스타일 */
+    #landingPage {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .landing-subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+
+    .link-text {
+      text-align: center;
+      margin-top: 25px;
+      color: var(--accent-color);
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .link-text:hover {
+      text-decoration: underline;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--gray-border);
+      margin: 25px 0;
+    }
+
     /* 로딩 스피너 컨테이너 스타일 */
     .spinner-container {
       display: flex;
@@ -656,8 +728,83 @@
 </head>
 <body>
   <div class="page-container">
+    <!-- 조회/인증 페이지 -->
+    <div id="landingPage">
+      <div class="header-content">
+        <h1>APL COLOR 진단 사전정보</h1>
+        <img src="./APLCOLOR_logo.png" alt="APL COLOR 로고" class="logo">
+      </div>
+      <p class="landing-subtitle">진단 전 입력하신 정보를 조회합니다.</p>
+
+      <div class="form-group">
+        <label for="landingName" class="required">성함</label>
+        <input type="text" id="landingName" placeholder="이름을 입력해주세요" oninput="this.value = this.value.replace(/[\s,，]/g, '');">
+      </div>
+
+      <div class="form-group">
+        <label class="required">연락처</label>
+        <div class="phone-input-container">
+          <input type="text" value="010" disabled class="phone-prefix">
+          <span>-</span>
+          <input type="tel" id="landingPhone2" maxlength="4" class="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length === 4) document.getElementById('landingPhone3').focus();">
+          <span>-</span>
+          <input type="tel" id="landingPhone3" maxlength="4" class="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+          <button type="button" class="verify-btn" id="landingSendCodeBtn" onclick="sendVerificationCode('landing')">인증</button>
+        </div>
+        <div class="verify-input-row" id="landingVerifyRow" style="display:none;">
+          <input type="tel" id="landingVerifyCode" maxlength="4" placeholder="인증번호 4자리" style="width:130px; text-align:center;" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+          <button type="button" class="verify-btn" onclick="handleVerifyCode('landing')">확인</button>
+          <span class="verify-timer" id="landingTimer"></span>
+        </div>
+        <div id="landingVerifyStatus"></div>
+      </div>
+
+      <button type="button" onclick="searchCustomerInfo()" class="next-btn" id="searchBtn">조회</button>
+
+      <hr class="divider">
+      <p class="link-text" onclick="goToNewInput()">아직 입력하지 않으셨나요? 처음 입력하기 ></p>
+    </div>
+
+    <!-- 조회 결과 페이지 (읽기 모드) -->
+    <div id="viewPage" style="display:none;">
+      <div class="header-content">
+        <h1>APL COLOR 고객정보 조회</h1>
+        <img src="./APLCOLOR_logo.png" alt="APL COLOR 로고" class="logo">
+      </div>
+      <h2 class="welcome-text"><span id="viewCustomerName"></span>님의 정보</h2>
+      <div class="completion-info">
+        <div class="info-item">
+          <span class="info-label">▪ 진단날짜/시간</span>
+          <span id="viewDateTime" class="date-time-value"></span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 예약상품</span>
+          <span id="viewServiceInfo" class="service-value"></span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 고객정보</span>
+          <div class="body-info-content" id="viewPersonalInfo"></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 신체정보</span>
+          <div class="body-info-content" id="viewBodyInfo"></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 진단 의뢰이유</span>
+          <div class="text-content" id="viewReasonInfo"></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label">▪ 원하는 스타일링</span>
+          <div class="text-content" id="viewStyleInfo"></div>
+        </div>
+      </div>
+      <div class="button-group">
+        <button onclick="goToEditMode()" class="next-btn">수정하기</button>
+      </div>
+    </div>
+
     <!-- 입력 페이지 -->
-    <div id="inputPage">
+    <div id="inputPage" style="display:none;">
       <div class="header-content">
         <h1>APL COLOR 고객정보입력</h1>
         <img src="./APLCOLOR_logo.png" alt="APL COLOR 로고" class="logo">
@@ -693,7 +840,7 @@
 
           <div class="form-group">
             <label for="time" class="required">2. 진단 시간</label>
-            <input type="time" id="time" required step="1800" value="12:00">
+            <input type="time" id="time" required step="1800" value="12:00" min="08:00" max="22:00">
           </div>
 
           <div class="form-group">
@@ -753,33 +900,40 @@
           <div class="form-group">
             <label for="phone" class="required">7. 연락처</label>
             <div class="phone-input-container">
-              <input 
-                type="text" 
-                value="010" 
-                disabled 
+              <input
+                type="text"
+                value="010"
+                disabled
                 class="phone-prefix"
               >
               <span>-</span>
-              <input 
+              <input
                 type="tel"
-                id="phone2" 
-                maxlength="4" 
-                pattern="[0-9]{4}" 
+                id="phone2"
+                maxlength="4"
+                pattern="[0-9]{4}"
                 required
                 class="phone-number"
                 oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length === 4) document.getElementById('phone3').focus();"
               >
               <span>-</span>
-              <input 
+              <input
                 type="tel"
-                id="phone3" 
-                maxlength="4" 
-                pattern="[0-9]{4}" 
+                id="phone3"
+                maxlength="4"
+                pattern="[0-9]{4}"
                 required
                 class="phone-number"
                 oninput="this.value = this.value.replace(/[^0-9]/g, '');"
               >
+              <button type="button" class="verify-btn" id="inputSendCodeBtn" onclick="sendVerificationCode('input')">인증</button>
             </div>
+            <div class="verify-input-row" id="inputVerifyRow" style="display:none;">
+              <input type="tel" id="inputVerifyCode" maxlength="4" placeholder="인증번호 4자리" style="width:130px; text-align:center;" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+              <button type="button" class="verify-btn" onclick="handleVerifyCode('input')">확인</button>
+              <span class="verify-timer" id="inputTimer"></span>
+            </div>
+            <div id="inputVerifyStatus"></div>
           </div>
 
           <div class="form-group">
@@ -914,43 +1068,293 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   
   <script>
+    // ============================================================
+    // 전역 상태 변수
+    // ============================================================
+    const API_BASE = 'https://cust-info-get-test-connect.apls.kr/api';
+    let currentVerifyToken = null;
+    let isPhoneVerified = false;
+    let currentCustomerId = null;
+    let isEditMode = false;
+    let cachedCustomerData = null;
+    let verifyTimers = {};
+    let isSubmitting = false;
+
     // 이미지 저장소
     const uploadedImages = {
       makeup: [],
       fashion: []
     };
 
-    // 페이지 로드 시 맨 위로 스크롤
+    // ============================================================
+    // 페이지 관리
+    // ============================================================
+    function hideAllPages() {
+      document.getElementById('landingPage').style.display = 'none';
+      document.getElementById('inputPage').style.display = 'none';
+      document.getElementById('completionPage').style.display = 'none';
+      document.getElementById('viewPage').style.display = 'none';
+    }
+
+    // ============================================================
+    // SMS 인증
+    // ============================================================
+    async function sendVerificationCode(context) {
+      const phone2El = context === 'landing' ? document.getElementById('landingPhone2') : document.getElementById('phone2');
+      const phone3El = context === 'landing' ? document.getElementById('landingPhone3') : document.getElementById('phone3');
+      const phone2 = phone2El.value;
+      const phone3 = phone3El.value;
+      const phone = '010-' + phone2 + '-' + phone3;
+
+      if (phone2.length !== 4 || phone3.length !== 4) {
+        alert('연락처를 올바르게 입력해주세요.');
+        return;
+      }
+
+      const sendBtn = document.getElementById(context + 'SendCodeBtn');
+      sendBtn.disabled = true;
+      sendBtn.textContent = '발송중...';
+
+      try {
+        const response = await fetch(API_BASE + '/auth/send-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ serviceName: '진단 사전정보 입력', phone: phone })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById(context + 'VerifyRow').style.display = 'flex';
+          startVerifyTimer(context, 180);
+          phone2El.disabled = true;
+          phone3El.disabled = true;
+          sendBtn.textContent = '재발송';
+          sendBtn.disabled = false;
+        } else {
+          alert(data.message || 'SMS 발송에 실패했습니다.');
+          sendBtn.textContent = '인증';
+          sendBtn.disabled = false;
+        }
+      } catch (error) {
+        alert('서버 통신 중 오류가 발생했습니다.');
+        sendBtn.textContent = '인증';
+        sendBtn.disabled = false;
+      }
+    }
+
+    async function handleVerifyCode(context) {
+      const phone2 = context === 'landing' ? document.getElementById('landingPhone2').value : document.getElementById('phone2').value;
+      const phone3 = context === 'landing' ? document.getElementById('landingPhone3').value : document.getElementById('phone3').value;
+      const phone = '010-' + phone2 + '-' + phone3;
+      const code = document.getElementById(context + 'VerifyCode').value;
+
+      if (code.length !== 4) {
+        alert('4자리 인증번호를 입력해주세요.');
+        return;
+      }
+
+      try {
+        const response = await fetch(API_BASE + '/auth/verify-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: phone, code: code })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          currentVerifyToken = data.verifyToken;
+          isPhoneVerified = true;
+
+          document.getElementById(context + 'VerifyRow').style.display = 'none';
+          document.getElementById(context + 'VerifyStatus').innerHTML = '<span class="verify-success">인증 완료</span>';
+          document.getElementById(context + 'SendCodeBtn').style.display = 'none';
+
+          if (verifyTimers[context]) clearInterval(verifyTimers[context]);
+
+          if (context === 'landing') {
+            document.getElementById('searchBtn').disabled = false;
+          }
+        } else {
+          alert(data.message || '인증에 실패했습니다.');
+        }
+      } catch (error) {
+        alert('서버 통신 중 오류가 발생했습니다.');
+      }
+    }
+
+    function startVerifyTimer(context, seconds) {
+      if (verifyTimers[context]) clearInterval(verifyTimers[context]);
+      let remaining = seconds;
+      const timerEl = document.getElementById(context + 'Timer');
+
+      timerEl.textContent = '3:00';
+      verifyTimers[context] = setInterval(function() {
+        remaining--;
+        const min = Math.floor(remaining / 60);
+        const sec = remaining % 60;
+        timerEl.textContent = min + ':' + String(sec).padStart(2, '0');
+
+        if (remaining <= 0) {
+          clearInterval(verifyTimers[context]);
+          timerEl.textContent = '시간만료';
+        }
+      }, 1000);
+    }
+
+    // ============================================================
+    // 조회/페이지 전환
+    // ============================================================
+    async function searchCustomerInfo() {
+      const name = document.getElementById('landingName').value.trim();
+      const phone2 = document.getElementById('landingPhone2').value;
+      const phone3 = document.getElementById('landingPhone3').value;
+      const phone = '010-' + phone2 + '-' + phone3;
+
+      if (!name) { alert('성함을 입력해주세요.'); return; }
+      if (!phone2 || phone2.length !== 4 || !phone3 || phone3.length !== 4) { alert('연락처를 입력해주세요.'); return; }
+      if (!isPhoneVerified) { alert('전화번호 인증이 필요합니다.'); return; }
+
+      try {
+        const url = API_BASE + '/customer-info/search?name=' + encodeURIComponent(name) + '&phone=' + encodeURIComponent(phone) + '&verifyToken=' + currentVerifyToken;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.success) {
+          currentCustomerId = data.data._id;
+          cachedCustomerData = data.data;
+          displayViewPage(data.data);
+        } else if (response.status === 404) {
+          alert('입력된 정보가 없습니다.');
+        } else {
+          alert(data.message || '조회에 실패했습니다.');
+        }
+      } catch (error) {
+        alert('서버 통신 중 오류가 발생했습니다.');
+      }
+    }
+
+    function goToNewInput() {
+      hideAllPages();
+      document.getElementById('inputPage').style.display = 'block';
+
+      // landingPage에서 입력한 이름이 있으면 가져오기
+      const name = document.getElementById('landingName').value.trim();
+      if (name) document.getElementById('name').value = name;
+
+      // 인증 상태 초기화 (inputPage에서 새로 인증)
+      isPhoneVerified = false;
+      currentVerifyToken = null;
+      isEditMode = false;
+      currentCustomerId = null;
+      window.scrollTo(0, 0);
+    }
+
+    function displayViewPage(data) {
+      hideAllPages();
+      document.getElementById('viewPage').style.display = 'block';
+
+      document.getElementById('viewCustomerName').textContent = data.name;
+      document.getElementById('viewDateTime').textContent = data.date + ' / ' + data.time;
+      document.getElementById('viewServiceInfo').textContent = data.serviceName;
+
+      let personalHTML = '<span class="body-info-item">• 성함: ' + data.name + '</span>';
+      personalHTML += '<span class="body-info-item">• 성별: ' + (data.gender === 'male' ? '남성' : '여성') + '</span>';
+      personalHTML += '<span class="body-info-item">• 나이: ' + data.age + '세</span>';
+      personalHTML += '<span class="body-info-item">• 연락처: ' + data.phone + '</span>';
+      if (data.occupation) personalHTML += '<span class="body-info-item">• 직업: ' + data.occupation + '</span>';
+      document.getElementById('viewPersonalInfo').innerHTML = personalHTML;
+
+      let bodyHTML = '';
+      if (data.height) bodyHTML += '<span class="body-info-item">• 키: ' + data.height + 'cm</span>';
+      if (data.weight) bodyHTML += '<span class="body-info-item">• 몸무게: ' + data.weight + 'kg</span>';
+      if (data.clothingSize) bodyHTML += '<span class="body-info-item">• 옷사이즈: ' + data.clothingSize + '</span>';
+      document.getElementById('viewBodyInfo').innerHTML = bodyHTML || '정보 없음';
+
+      document.getElementById('viewReasonInfo').textContent = data.reason;
+      document.getElementById('viewStyleInfo').textContent = data.stylePreference;
+
+      window.scrollTo(0, 0);
+    }
+
+    function goToEditMode() {
+      isEditMode = true;
+      hideAllPages();
+      document.getElementById('inputPage').style.display = 'block';
+
+      populateFormWithData(cachedCustomerData);
+
+      document.getElementById('phone2').disabled = true;
+      document.getElementById('phone3').disabled = true;
+      document.getElementById('inputSendCodeBtn').style.display = 'none';
+      document.getElementById('inputVerifyRow').style.display = 'none';
+      document.getElementById('inputVerifyStatus').innerHTML = '<span class="verify-success">인증 완료</span>';
+
+      window.scrollTo(0, 0);
+    }
+
+    function populateFormWithData(data) {
+      document.getElementById('date').value = data.date;
+      document.getElementById('time').value = data.time;
+      setServiceByName(data.serviceName);
+      document.getElementById('name').value = data.name;
+      if (data.gender) {
+        const genderRadio = document.querySelector('input[name="gender"][value="' + data.gender + '"]');
+        if (genderRadio) genderRadio.checked = true;
+      }
+      document.getElementById('age').value = data.age;
+      const phoneParts = data.phone.split('-');
+      if (phoneParts.length === 3) {
+        document.getElementById('phone2').value = phoneParts[1];
+        document.getElementById('phone3').value = phoneParts[2];
+      }
+      document.getElementById('occupation').value = data.occupation || '';
+      document.getElementById('height').value = data.height || '';
+      document.getElementById('weight').value = data.weight || '';
+      document.getElementById('clothingSize').value = data.clothingSize || '';
+      document.getElementById('reason').value = data.reason;
+      document.getElementById('stylePreference').value = data.stylePreference;
+      document.getElementById('privacyConsent').checked = true;
+    }
+
+    function setServiceByName(serviceName) {
+      const select = document.getElementById('service');
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].text === serviceName) {
+          select.selectedIndex = i;
+          return;
+        }
+      }
+    }
+
+    // ============================================================
+    // 페이지 로드
+    // ============================================================
     window.onload = function() {
-        // 두 번 스크롤하여 확실하게 상단으로 이동
         window.scrollTo(0, 0);
         setTimeout(function() {
             window.scrollTo(0, 0);
         }, 100);
-        
-        // 오늘 날짜를 구하고 date input의 min 속성 설정
+
         const today = new Date();
         const yyyy = today.getFullYear();
         const mm = String(today.getMonth() + 1).padStart(2, '0');
         const dd = String(today.getDate()).padStart(2, '0');
-        const todayString = `${yyyy}-${mm}-${dd}`;
-        
-        const dateInput = document.getElementById('date');
-        dateInput.min = todayString;  // 오늘 이전 날짜 선택 불가
+        const todayString = yyyy + '-' + mm + '-' + dd;
 
-        // 날짜 입력 필드에 change 이벤트 리스너 추가
+        const dateInput = document.getElementById('date');
+        dateInput.min = todayString;
+
         dateInput.addEventListener('change', function(e) {
             const selectedDate = new Date(this.value);
             const today = new Date();
-            today.setHours(0, 0, 0, 0); // 시간 제거하고 날짜만 비교
+            today.setHours(0, 0, 0, 0);
 
             if (selectedDate < today) {
                 alert('과거 날짜는 선택할 수 없습니다.');
-                this.value = todayString; // 오늘 날짜로 재설정
+                this.value = todayString;
             }
         });
 
-        // 모바일용 입력 제한 추가
         dateInput.addEventListener('input', function(e) {
             const selectedDate = new Date(this.value);
             const today = new Date();
@@ -962,8 +1366,9 @@
             }
         });
 
-        // 입력 폼 표시
-        document.getElementById('inputPage').style.display = 'block';
+        // landingPage부터 시작
+        hideAllPages();
+        document.getElementById('landingPage').style.display = 'block';
     }
 
     // 이미지 업로드 처리 함수
@@ -1085,6 +1490,14 @@
             return;
         }
 
+        // 3-1. 시간 범위 검증 (08:00 ~ 22:00)
+        const timeValue = document.getElementById('time').value;
+        if (timeValue < '08:00' || timeValue > '22:00') {
+            alert('진단 시간은 08:00 ~ 22:00 사이만 가능합니다.');
+            document.getElementById('time').focus();
+            return;
+        }
+
         // 4. 예약 상품 검증
         if (!document.getElementById('service').value.trim()) {
             alert('예약 상품을 선택해주세요.');
@@ -1109,10 +1522,16 @@
         // 7. 연락처 검증
         const phone2 = document.getElementById('phone2').value;
         const phone3 = document.getElementById('phone3').value;
-        
+
         if (!phone2 || !phone3 || phone2.length !== 4 || phone3.length !== 4) {
             alert('연락처를 올바르게 입력해주세요.');
             document.getElementById('phone2').focus();
+            return;
+        }
+
+        // 7-1. 전화번호 인증 확인
+        if (!isPhoneVerified) {
+            alert('전화번호 인증이 필요합니다.');
             return;
         }
 
@@ -1225,17 +1644,17 @@
         }
 
         // 화면 전환
-        document.getElementById('inputPage').style.display = 'none';
+        hideAllPages();
         document.getElementById('completionPage').style.display = 'block';
-        
+
         // 맨 위로 스크롤
         window.scrollTo(0, 0);
     }
 
     function editForm() {
-        document.getElementById('completionPage').style.display = 'none';
+        hideAllPages();
         document.getElementById('inputPage').style.display = 'block';
-        
+
         // 맨 위로 스크롤
         window.scrollTo(0, 0);
     }
@@ -1246,11 +1665,12 @@
             const completeBtn = document.getElementById('completeBtn');
 
             // 이미 제출 중이면 중복 클릭 방지
-            if (completeBtn.disabled) {
+            if (completeBtn.disabled || isSubmitting) {
                 return;
             }
 
-            // 버튼 비활성화 및 텍스트 변경
+            // 중복 제출 방지
+            isSubmitting = true;
             completeBtn.disabled = true;
             completeBtn.textContent = '처리 중...';
             completeBtn.style.opacity = '0.6';
@@ -1261,7 +1681,7 @@
 
             // 폼 데이터 수집
             const formData = new FormData();
-            
+
             // 기본 고객 정보 추가
             formData.append('date', document.getElementById('date').value);
             formData.append('time', document.getElementById('time').value);
@@ -1276,52 +1696,62 @@
             formData.append('clothingSize', document.getElementById('clothingSize').value || '');
             formData.append('reason', document.getElementById('reason').value);
             formData.append('stylePreference', document.getElementById('stylePreference').value);
-            
+
             // 이미지 업로드
             uploadedImages.makeup.forEach((item, index) => {
                 formData.append(`makeupImage${index + 1}`, item.file);
             });
-            
+
             uploadedImages.fashion.forEach((item, index) => {
                 formData.append(`fashionImage${index + 1}`, item.file);
             });
-            
+
             // 이미지 파일 정보 추가
             formData.append('makeupImagesCount', uploadedImages.makeup.length);
             formData.append('fashionImagesCount', uploadedImages.fashion.length);
 
-            // API 요청 시 타임아웃 설정 (60초 - 이미지 업로드를 고려해 시간 연장)
+            // API 요청 시 타임아웃 설정 (60초)
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 60000);
 
-            // Cloudflare Pages 배포 환경에서는 백엔드 API 절대 URL 사용
-            const API_URL = 'https://cust-info-get-test-connect.apls.kr/api/customer-info';
+            // POST(신규) 또는 PUT(수정) 분기
+            let apiUrl;
+            let method;
 
-            const response = await fetch(API_URL, {
-                method: 'POST',
+            if (isEditMode && currentCustomerId) {
+                apiUrl = API_BASE + '/customer-info/' + currentCustomerId;
+                method = 'PUT';
+            } else {
+                apiUrl = API_BASE + '/customer-info';
+                method = 'POST';
+            }
+
+            const response = await fetch(apiUrl, {
+                method: method,
                 body: formData,
                 signal: controller.signal
             });
 
-            clearTimeout(timeoutId); // 타임아웃 클리어
+            clearTimeout(timeoutId);
 
             // 로딩 스피너 숨기기
             document.getElementById('loadingSpinner').style.display = 'none';
 
             if (response.ok) {
-                if (confirm("고객정보 입력이 완료되었습니다. 감사합니다.")) {
+                const successMsg = isEditMode
+                    ? '고객정보가 수정되었습니다. 감사합니다.'
+                    : '고객정보 입력이 완료되었습니다. 감사합니다.';
+
+                if (confirm(successMsg)) {
                     // 카카오톡 인앱 브라우저 감지
                     const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
-                    
+
                     if (isKakaoInApp) {
-                        // 카카오톡 인앱 브라우저 닫기 시도
                         location.href = "kakaotalk://inappbrowser/close";
-                        // 백업 방법: 약간의 지연 후 다시 시도
                         setTimeout(() => {
                             location.href = "kakaotalk://inappbrowser/close";
                         }, 100);
                     } else {
-                        // 일반 브라우저에서는 창 닫기 시도
                         window.close();
                     }
                 }
@@ -1333,6 +1763,9 @@
             // 에러 발생 시에도 로딩 스피너 숨기기
             document.getElementById('loadingSpinner').style.display = 'none';
 
+            // 중복 제출 방지 해제
+            isSubmitting = false;
+
             // 버튼 다시 활성화 (에러 발생 시 재시도 가능하도록)
             const completeBtn = document.getElementById('completeBtn');
             completeBtn.disabled = false;
@@ -1342,7 +1775,6 @@
 
             console.error('Error:', error);
 
-            // 타임아웃 에러 확인
             if (error.name === 'AbortError') {
                 alert('서버 응답 시간이 너무 오래 걸립니다. 잠시 후 다시 시도해주세요.');
             } else {

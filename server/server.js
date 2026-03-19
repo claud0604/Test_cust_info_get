@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const connectDB = require('./config/db');
 const custInfoRoutes = require('./routes/custInfoRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3010;
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
 // API 라우트
+app.use('/api/auth', authRoutes);
 app.use('/api/customer-info', custInfoRoutes);
 
 // 헬스체크 엔드포인트
