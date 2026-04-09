@@ -1023,6 +1023,10 @@
         <img src="./APLCOLOR_logo.png" alt="APL COLOR 로고" class="logo">
       </div>
       <h2 class="welcome-text"><span id="customerName"></span>님!<br>아래 정보를 확인해주세요.</h2>
+      <div class="button-group" style="margin-top: 16px; margin-bottom: 20px;">
+        <button onclick="editForm()" class="edit-btn">수정</button>
+        <button id="completeBtn" onclick="completeForm()" class="complete-btn">완료</button>
+      </div>
       <p class="completion-title">입력정보 확인후 완료버튼을 눌러주세요.</p>
       <div class="completion-info">
         <div class="info-item">
@@ -1053,10 +1057,6 @@
           <span class="info-label">▪ 업로드된 이미지</span>
           <div class="image-preview-container" id="imagePreviewContainer" style="margin-top: 10px;"></div>
         </div>
-      </div>
-      <div class="button-group">
-        <button onclick="editForm()" class="edit-btn">수정</button>
-        <button id="completeBtn" onclick="completeForm()" class="complete-btn">완료</button>
       </div>
     </div>
   </div>
@@ -1235,7 +1235,8 @@
           cachedCustomerData = data.data;
           displayViewPage(data.data);
         } else if (response.status === 404) {
-          alert('입력된 정보가 없습니다.');
+          alert('기존에 입력된 고객님의 정보가 없습니다.\n고객정보입력 페이지로 이동합니다.');
+          goToNewInput();
         } else {
           alert(data.message || '조회에 실패했습니다.');
         }
