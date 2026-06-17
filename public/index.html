@@ -897,12 +897,12 @@
 
           <div class="form-group">
             <label for="age" class="required">6. 나이</label>
-            <input 
-              type="number" 
-              id="age" 
-              required 
-              min="1" 
-              max="150"
+            <input
+              type="number"
+              id="age"
+              required
+              min="1"
+              max="99"
               placeholder="나이를 입력해주세요"
               style="max-width: 150px;"
             >
@@ -1536,9 +1536,15 @@
             return;
         }
 
-        // 6. 나이 검증 (추가)
-        if (!document.getElementById('age').value.trim()) {
+        // 6. 나이 검증
+        const ageValue = parseInt(document.getElementById('age').value.trim());
+        if (!document.getElementById('age').value.trim() || isNaN(ageValue)) {
             alert('나이를 입력해주세요.');
+            document.getElementById('age').focus();
+            return;
+        }
+        if (ageValue < 1 || ageValue > 99) {
+            alert('나이는 1~99 사이로 입력해주세요.');
             document.getElementById('age').focus();
             return;
         }
