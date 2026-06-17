@@ -21,6 +21,7 @@ const createCustomerInfo = async (req, res) => {
             clothingSize,
             reason,
             stylePreference,
+            phoneVerified,
         } = req.body;
 
         // 필수 필드 검증
@@ -87,6 +88,7 @@ const createCustomerInfo = async (req, res) => {
             clothingSize: clothingSize || '',
             reason,
             stylePreference,
+            phoneVerified: phoneVerified === true || phoneVerified === 'true',
             date,
             time,
             images: uploadedImageKeys,
@@ -191,6 +193,7 @@ const updateCustomerInfo = async (req, res) => {
         const {
             date, time, serviceName, name, gender, age, phone,
             occupation, height, weight, clothingSize, reason, stylePreference,
+            phoneVerified,
         } = req.body;
 
         // 이미지 처리
@@ -228,6 +231,7 @@ const updateCustomerInfo = async (req, res) => {
             clothingSize: clothingSize !== undefined ? clothingSize : existingInfo.clothingSize,
             reason: reason || existingInfo.reason,
             stylePreference: stylePreference || existingInfo.stylePreference,
+            phoneVerified: phoneVerified !== undefined ? (phoneVerified === true || phoneVerified === 'true') : existingInfo.phoneVerified,
             images: uploadedImageKeys,
         };
 

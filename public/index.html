@@ -1593,7 +1593,8 @@
             weight: document.getElementById('weight').value || '',
             clothingSize: document.getElementById('clothingSize').value || '',
             reason: document.getElementById('reason').value,
-            stylePreference: document.getElementById('stylePreference').value
+            stylePreference: document.getElementById('stylePreference').value,
+            phoneVerified: isPhoneVerified
         };
 
         // 완료 페이지 데이터 설정
@@ -1726,6 +1727,7 @@
             formData.append('clothingSize', document.getElementById('clothingSize').value || '');
             formData.append('reason', document.getElementById('reason').value);
             formData.append('stylePreference', document.getElementById('stylePreference').value);
+            formData.append('phoneVerified', isPhoneVerified);
 
             // 이미지 업로드
             uploadedImages.makeup.forEach((item, index) => {

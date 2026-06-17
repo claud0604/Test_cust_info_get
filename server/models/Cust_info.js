@@ -33,6 +33,10 @@ const custInfoSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
+    phoneVerified: {
+        type: Boolean,
+        default: false,
+    },
     clothingSize: {
         type: String,
         default: '',
